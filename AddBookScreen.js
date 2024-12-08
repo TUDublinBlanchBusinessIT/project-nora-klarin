@@ -5,7 +5,6 @@ import { db } from "./firebaseConfig"; // Ensure firebaseConfig initializes Fire
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function AddBookScreen() {
-  const [books, setBooks] = useState([]);
   const [bookAuthor, setBookAuthor] = useState("");
   const [bookTitle, setBookTitle] = useState("");
   const [bookGenre, setBookGenre] = useState("");

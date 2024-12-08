@@ -1,21 +1,21 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
-const HomeScreen = ({ navigation }) => {
-  // Navigate to the "AddBook" screen when clicked
+
+export default function HomeScreen({ navigation }) {
   const handleAddBook = () => {
-    navigation.navigate("AddBook");
+    navigation.navigate("AddBookScreen");
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Book Recommender App</Text>
+      <Text style={styles.title}>Welcome to CoverLover</Text>
       <Text style={styles.subtitle}>What would you like to do?</Text>
-      {/* Button to add a book */}
       <Button title="Add a Book I'm Reading" onPress={handleAddBook} />
     </View>
   );
-};
+}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +33,4 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     marginBottom: 20,
-  },
-});
-
-export default HomeScreen;
+  }})
