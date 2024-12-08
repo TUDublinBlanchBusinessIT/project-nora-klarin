@@ -3,19 +3,27 @@ import { View, Text, Button, StyleSheet } from "react-native";
 
 
 export default function HomeScreen({ navigation }) {
+
   const handleAddBook = () => {
-    navigation.navigate("AddBookScreen");
+    navigation.navigate("Add Book");
   };
+  const handleViewList = () => {
+    navigation.navigate("Book List");
+};
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to CoverLover</Text>
       <Text style={styles.subtitle}>What would you like to do?</Text>
-      <Button title="Add a Book I'm Reading" onPress={handleAddBook} />
+      <View style={styles.buttonContainer}>
+        <Button title="Add a Book I'm Reading" onPress={handleAddBook} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="View my Book List" onPress={handleViewList} />
+      </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -33,4 +41,9 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     marginBottom: 20,
-  }})
+  },
+  buttonContainer: {
+    marginVertical: 10,
+    width: "50%",       
+  },
+});
