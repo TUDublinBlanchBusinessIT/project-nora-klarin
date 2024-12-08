@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
-import { db } from "./firebaseConfig"; // Ensure firebaseConfig initializes Firestore
-import { collection, getDocs } from "firebase/firestore";
-import { Rating } from "react-native-ratings"; // To show star rating
+import { db } from "./firebaseConfig";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"; 
+import { Rating } from "react-native-ratings";
+import Icon from 'react-native-vector-icons/Ionicons'; 
 
 export default function BookListScreen() {
   const [books, setBooks] = useState([]);
 
-  // Fetch books from Firestore when the component mounts
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        // Get all documents from the 'books' collection
         const querySnapshot = await getDocs(collection(db, "books"));
-        
-        // Map the documents to an array of book data
+
         setBooks(
           querySnapshot.docs.map((doc) => ({
             ...doc.data(),
-            id: doc.id, // Document ID for uniqueness
+            id: doc.id,
           }))
         );
       } catch (error) {
@@ -28,8 +26,19 @@ export default function BookListScreen() {
     };
 
     fetchBooks();
-  }, []); // Empty dependency array to run once when component mounts
+  }, []);
+  const handleDelete = async (bookId) => {
+    try {
+      const updatedBookList = books.filter((book) => book.id !== bookId);
+      setBooks(updatedBookList);
 
+      // Update Firebase to delete the book from the database
+      await deleteDoc(doc(db, "books", bookId)); // Delete document from Firestore
+    } catch (error) {
+      console.error("Error deleting book:", error);
+      Alert.alert("Error", "Failed to delete the book.");
+    }
+  };
   // Render each book item
   const renderBookItem = ({ item }) => (
     <View style={styles.bookItem}>
@@ -41,8 +50,14 @@ export default function BookListScreen() {
         type="star"
         imageSize={20}
         readonly
-        startingValue={item.rating} // Rating value from Firestore
+        startingValue={item.rating}
         style={{ marginBottom: 10 }}
+      />
+      <Icon
+        name="trash-bin"
+        size={30}
+        color="red"
+        onPress={() => handleDelete(item.id)}
       />
     </View>
   );
@@ -50,7 +65,6 @@ export default function BookListScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Book List</Text>
-      {/* FlatList to display books */}
       <FlatList
         data={books}
         renderItem={renderBookItem}
@@ -79,7 +93,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 10,
     elevation: 3, // For Android shadow
-    shadowColor: "#000", // For iOS shadow
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
