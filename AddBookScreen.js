@@ -10,25 +10,6 @@ export default function AddBookScreen() {
   const [bookGenre, setBookGenre] = useState("");
   const [bookRating, setBookRating] = useState(0); // Initialize rating to 0
 
-  // Fetch books from Firestore on component mount
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "books"));
-        setBooks(
-          querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-
-    fetchBooks();
-  }, []);
-
   // Save book data to Firestore
   const saveData = async () => {
     if (bookAuthor.trim() && bookTitle.trim() && bookGenre.trim() && bookRating > 0) {
@@ -57,7 +38,7 @@ export default function AddBookScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Add a Book You're Reading</Text>
-      
+
       {/* Book Title Input */}
       <TextInput
         style={styles.input}
@@ -65,7 +46,7 @@ export default function AddBookScreen() {
         value={bookTitle}
         onChangeText={setBookTitle}
       />
-      
+
       {/* Book Author Input */}
       <TextInput
         style={styles.input}
@@ -73,7 +54,7 @@ export default function AddBookScreen() {
         value={bookAuthor}
         onChangeText={setBookAuthor}
       />
-      
+
       {/* Book Genre Input */}
       <TextInput
         style={styles.input}
@@ -81,17 +62,19 @@ export default function AddBookScreen() {
         value={bookGenre}
         onChangeText={setBookGenre}
       />
-      
+
       {/* Star Rating Input */}
-      <Text style={styles.label}>Rate this book:</Text>
-      <Rating
-        type="star"
-        startingValue={bookRating}
-        imageSize={30}
-        onFinishRating={setBookRating} // Update rating on change
-        style={{ marginBottom: 20 }}
-      />
-      
+      <Text style={styles.ratingLabel}>Rate this book:</Text>
+      <View style={styles.ratingContainer}>
+        <Rating
+          type="star"
+          startingValue={bookRating}
+          imageSize={30}
+          onFinishRating={setBookRating} // Update rating on change
+          style={styles.rating}
+        />
+      </View>
+
       {/* Save Button */}
       <Button title="Add Book" onPress={saveData} />
     </View>
@@ -110,6 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center",
   },
   input: {
     width: "100%",
@@ -121,8 +105,26 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
   },
-  label: {
+  ratingLabel: {
     fontSize: 16,
+    fontWeight: "bold",
     marginBottom: 10,
+    color: "#333",
+  },
+  ratingContainer: {
+    width: "100%",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  rating: {
+    marginVertical: 5,
   },
 });

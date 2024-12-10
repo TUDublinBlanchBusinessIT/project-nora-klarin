@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import React, { useState } from "react"; // Ensure useState is imported
+import { View, Text, TextInput, Alert, StyleSheet } from "react-native";
 import { Rating } from "react-native-ratings";
-import { db } from "./firebaseConfig"; // Import Firebase config
 import { doc, updateDoc } from "firebase/firestore";
 import { TouchableOpacity } from "react-native";
+import { db } from "./firebaseConfig"; // Ensure Firebase is configured properly
 
-export default function EditBookScreen({ route, navigation }) {
-  const { bookId, currentTitle, currentAuthor, currentGenre, currentRating } = route.params; // Get data passed from the previous screen
+export default function EditBookScreen({ route = {}, navigation }) {
+  const {
+    bookId = "",
+    currentTitle = "",
+    currentAuthor = "",
+    currentGenre = "",
+    currentRating = 0,
+  } = route.params || {};
 
   const [bookTitle, setBookTitle] = useState(currentTitle);
   const [bookAuthor, setBookAuthor] = useState(currentAuthor);
@@ -17,7 +23,7 @@ export default function EditBookScreen({ route, navigation }) {
     if (bookAuthor.trim() && bookTitle.trim() && bookGenre.trim() && bookRating > 0) {
       try {
         const bookRef = doc(db, "books", bookId);
-  
+
         // Update the book in Firestore
         await updateDoc(bookRef, {
           author: bookAuthor,
@@ -27,6 +33,7 @@ export default function EditBookScreen({ route, navigation }) {
         });
 
         Alert.alert("Changes Saved", "Your book details have been successfully updated!");
+        navigation.goBack(); // Go back after saving
       } catch (err) {
         console.error("Error updating book:", err);
         Alert.alert("Error", "Failed to update book.");
@@ -35,7 +42,7 @@ export default function EditBookScreen({ route, navigation }) {
       Alert.alert("Validation Error", "Please fill in all fields and provide a rating.");
     }
   };
-   
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Edit Book Details</Text>
@@ -65,11 +72,9 @@ export default function EditBookScreen({ route, navigation }) {
         onFinishRating={setBookRating}
         style={{ marginBottom: 20 }}
       />
-
-<TouchableOpacity style={styles.saveButton} onPress={saveData}>
-  <Text style={styles.saveButtonText}>Save Changes</Text>
-</TouchableOpacity>
-
+      <TouchableOpacity style={styles.saveButton} onPress={saveData}>
+        <Text style={styles.saveButtonText}>Save Changes</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -102,7 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    backgroundColor: '#6200ea',
+    backgroundColor: "#6200ea",
     paddingVertical: 15,
     paddingHorizontal: 50,
     borderRadius: 25,
@@ -113,9 +118,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   saveButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
-  
 });
