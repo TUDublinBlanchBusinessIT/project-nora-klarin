@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { Rating } from "react-native-ratings";
 import { db } from "./firebaseConfig"; // Import Firebase config
 import { doc, updateDoc } from "firebase/firestore";
+import { TouchableOpacity } from "react-native";
 
 export default function EditBookScreen({ route, navigation }) {
   const { bookId, currentTitle, currentAuthor, currentGenre, currentRating } = route.params; // Get data passed from the previous screen
@@ -24,11 +25,8 @@ export default function EditBookScreen({ route, navigation }) {
           genre: bookGenre,
           rating: bookRating,
         });
-  
-        // Pass a parameter to indicate a refresh is needed
-        navigation.navigate("BookListScreen", { refresh: true });
-  
-        Alert.alert("Success", "Book updated successfully!");
+
+        Alert.alert("Changes Saved", "Your book details have been successfully updated!");
       } catch (err) {
         console.error("Error updating book:", err);
         Alert.alert("Error", "Failed to update book.");
@@ -37,7 +35,7 @@ export default function EditBookScreen({ route, navigation }) {
       Alert.alert("Validation Error", "Please fill in all fields and provide a rating.");
     }
   };
-  
+   
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Edit Book Details</Text>
@@ -67,7 +65,11 @@ export default function EditBookScreen({ route, navigation }) {
         onFinishRating={setBookRating}
         style={{ marginBottom: 20 }}
       />
-      <Button title="Save Changes" onPress={saveData} />
+
+<TouchableOpacity style={styles.saveButton} onPress={saveData}>
+  <Text style={styles.saveButtonText}>Save Changes</Text>
+</TouchableOpacity>
+
     </View>
   );
 }
@@ -99,4 +101,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
+  saveButton: {
+    backgroundColor: '#6200ea',
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });

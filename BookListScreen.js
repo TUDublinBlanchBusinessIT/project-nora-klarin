@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
-import { Card, Button, Title, Paragraph } from "react-native-paper"; // Import Card and other components
+import { Card, Button, Title, Paragraph } from "react-native-paper";
 import { db } from "./firebaseConfig";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { Rating } from "react-native-ratings";
-import { useFocusEffect } from "@react-navigation/native"; // Corrected useFocusEffect import
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function BookListScreen({ navigation, route }) {
+export default function BookListScreen({ navigation }) {
   const [books, setBooks] = useState([]);
 
   // Function to fetch books from Firestore
@@ -48,26 +48,32 @@ export default function BookListScreen({ navigation, route }) {
   // Render individual book items
   const renderBookItem = ({ item }) => (
     <Card style={styles.card}>
-      <Card.Content>
-        <Title>{item.title}</Title>
-        <Paragraph>Author: {item.author}</Paragraph>
-        <Paragraph>Genre: {item.genre}</Paragraph>
-        <Paragraph>Rating:</Paragraph>
-        <Rating
-          type="star"
-          imageSize={20}
-          readonly
-          startingValue={item.rating}
-          style={{ marginBottom: 10 }}
-        />
-      </Card.Content>
+<Card.Content>
+  <Title>{item.title}</Title>
+  <Paragraph>Author: {item.author}</Paragraph>
+  <Paragraph>Genre: {item.genre}</Paragraph>
+  <View style={styles.ratingContainer}>
+    <Text style={styles.ratingLabel}>Rating:</Text>
+    <Rating
+      type="star"
+      readonly
+      startingValue={item.rating}
+      imageSize={25}
+      style={styles.rating}
+    />
+  </View>
+</Card.Content>
       <Card.Actions>
-        <Button onPress={() => handleDelete(item.id)} icon="trash-can">
+        <Button
+          onPress={() => handleDelete(item.id)}
+          icon="delete"
+          mode="text"
+        >
           Delete
         </Button>
         <Button
           onPress={() =>
-            navigation.navigate("EditBookScreen", {
+            navigation.navigate("Edit", {
               bookId: item.id,
               currentTitle: item.title,
               currentAuthor: item.author,
@@ -76,6 +82,7 @@ export default function BookListScreen({ navigation, route }) {
             })
           }
           icon="pencil"
+          mode="text"
         >
           Edit
         </Button>
@@ -90,7 +97,9 @@ export default function BookListScreen({ navigation, route }) {
         data={books}
         renderItem={renderBookItem}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={<Text style={styles.emptyText}>No books found.</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No books found.</Text>
+        }
       />
     </View>
   );
@@ -118,4 +127,25 @@ const styles = StyleSheet.create({
     color: "#999",
     marginTop: 20,
   },
+  ratingContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    alignItems: "center", 
+  },
+  ratingLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#333",
+  },
+  rating: {
+    marginVertical: 5,
+  },  
 });

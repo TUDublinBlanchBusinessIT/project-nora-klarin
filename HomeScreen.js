@@ -15,7 +15,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Book App</Text>
+      <Text style={styles.title}>Welcome to Cover Lover</Text>
 
       {/* Card for adding a book */}
       <Card style={styles.card}>
