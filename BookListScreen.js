@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
+import { View, Text, FlatList, StyleSheet, Alert, ScrollView} from "react-native";
 import { db } from "./firebaseConfig";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"; 
 import { Rating } from "react-native-ratings";
@@ -30,10 +30,8 @@ export default function BookListScreen() {
   const handleDelete = async (bookId) => {
     try {
       const updatedBookList = books.filter((book) => book.id !== bookId);
-      setBooks(updatedBookList);
-
-      // Update Firebase to delete the book from the database
-      await deleteDoc(doc(db, "books", bookId)); // Delete document from Firestore
+      setBooks(updatedBookList); 
+      await deleteDoc(doc(db, "books", bookId)); 
     } catch (error) {
       console.error("Error deleting book:", error);
       Alert.alert("Error", "Failed to delete the book.");
@@ -70,8 +68,8 @@ export default function BookListScreen() {
         renderItem={renderBookItem}
         keyExtractor={(item) => item.id}
       />
-    </View>
-  );
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
@@ -92,7 +90,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     borderRadius: 10,
-    elevation: 3, // For Android shadow
+    elevation: 3,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
