@@ -32,8 +32,7 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Add" component={AddBookScreen} />
-        {/* Add the stack navigator as a screen here */}
+        <Tab.Screen name="Add Book" component={AddBookScreen} />
         <Tab.Screen name="Book List" component={BookListStackNavigator} />
       </Tab.Navigator>
     </NavigationContainer>
